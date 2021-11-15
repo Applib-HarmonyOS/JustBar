@@ -1,44 +1,52 @@
 # JustBar
+A HMOS library to add a Bar.
 
-![](https://github.com/Hamadakram/JustBar/blob/master/art/banner.gif)
-## Download
-Grab via Gradle:
-```groove
-implementation 'com.irozon.justbar:justbar:1.0.1'
+# Source
+Inspired by [Hammad Akram/JustBar](https://github.com/Hamadakram/JustBar) - version 1.0
+
+## Features
+This library provides an animation similar to Just bar feature.
+<img src="https://github.com/applibgroup/Instalike/blob/master/screenshots/instalikeview.gif" width="256">
+
+## Dependency
+1. For using justbar module in sample app, include the source code and add the below dependencies in entry/build.gradle to generate hap/support.har.
+```groovy
+	dependencies {
+        implementation fileTree(dir: 'libs', include: ['*.jar', '*.har'])
+        testImplementation 'junit:junit:4.13'
+        ohosTestImplementation 'com.huawei.ohos.testkit:runner:1.0.0.200'
+        implementation project(':justbar')
+    }
 ```
+2. For using justbar in separate application using har file, add the har file in the entry/libs folder and add the dependencies in entry/build.gradle file.
+```groovy
+	dependencies {
+		implementation fileTree(dir: 'libs', include: ['*.har'])
+		testImplementation 'junit:junit:4.13'
+	}
+```
+
 ## Usage
+#### Include following code in your layout:
 ```xml
     <com.irozon.justbar.JustBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.irozon.justbar.BarItem
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:icon="@drawable/ic_search"
-            app:radius="25dp" />
-        .
-        .
-        .
+            ohos:id="$+id:bottomBar"
+            ohos:width="match_parent"
+            ohos:height="match_content"
+            ohos:bottom_margin="16vp">
+            <com.irozon.justbar.BarItem
+                ohos:id="$+id:barItem"
+                ohos:width="0vp"
+                ohos:height="0vp"
+                app:icon="$graphic:ic_search"
+                app:radius="35vp" />
+            .
+            .
+            .
 
     </com.irozon.justbar.JustBar>
 ```
-#### BarItem - Child for ` JustBar `:
-Optional attributes for ` BarItem `
-```xml
-    <com.irozon.justbar.BarItem
-            android:id="@+id/barItem"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:selectedColor="@color/colorSelected"
-            app:unSelectedColor="@color/colorUnselected"
-            app:selectedIconColor="@color/colorIconSelected"
-            app:unSelectedIconColor="@color/colorIconUnselected"
-            app:selected="false"
-            app:icon="@drawable/ic_search"
-            app:radius="25dp" />
-```
-Attribute | Desription
+Attribute | Description
 --- | ---
 `selectedColor` | Selected state color for the ` BarItem `
 `unSelectedColor` | Unselected state color for the `BarItem`
@@ -48,6 +56,7 @@ Attribute | Desription
 `icon` | Icon for `BarItem`
 `radius` | Radius for the `BarItem`
 
+Note: The user can only enter Red, Green and Blue colors for the attributes selectedColor, unSelectedColor, selectedIconColor and unSelectedIconColor because of the limitation mentioned in the FutureWork section
 
 #### Action for `BarItem`:
 ```java
@@ -59,21 +68,11 @@ Attribute | Desription
            });
 ```
 
-## Apps using JustBar
-If you are using JustBar in your app and would like to be listed here, please let me know by [email](mailto:hamadakram91@gmail.com) or opening a new issue!
-
-## Authors
-
-* **Hammad Akram** - (https://github.com/hamadakram)
-
-## Contribution
-Pull requests are welcome! Feel free to browse through open issues to look for things that need work. If you have a feature request or bug, please open a new issue so i can track it.
-
-## Acknowledgments
-
-* Built on [concept](https://www.uplabs.com/posts/function-bar-animation-asus-zenui-6-0-concept) by [Igor](https://www.uplabs.com/motionigor)
-* [Mockup](https://dribbble.com/shots/2638092-Free-HTC-One-A9-Mockup-PSD) by [Ramotion](https://dribbble.com/Ramotion)
-
+## Future Work
+Since there is no alternate api for setColorFilter in HMOS platform, custom attributes - app:selectedColor, 
+app:unSelectedColor, app:selectedIconColor, app:unSelectedIconColor  is currently not supported. 
+As a result, user needs to call the createColorMatrix function and pass a colorCode as an argument which will internally call setColorMatrix(createColorMatrix(selectedColor)) to change the color of the drawable. Once HMOS platform supports setColorFilter, then this custom attribute can be included.
+                                                                                                   
 ## Licence
 ```
 Copyright 2018 Irozon, Inc.
@@ -89,4 +88,5 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-```
+```                                                                                   
+

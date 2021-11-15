@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BottomBar.iml" filepath="$PROJECT_DIR$/BottomBar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/justbar/justbar.iml" filepath="$PROJECT_DIR$/justbar/justbar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JustBar.iml" filepath="$PROJECT_DIR$/.idea/modules/JustBar.iml" group="JustBar" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/entry/entry.iml" filepath="$PROJECT_DIR$/.idea/modules/entry/entry.iml" group="JustBar/entry" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/justbar/justbar.iml" filepath="$PROJECT_DIR$/.idea/modules/justbar/justbar.iml" group="JustBar/justbar" />
     </modules>
   </component>
 </project>
