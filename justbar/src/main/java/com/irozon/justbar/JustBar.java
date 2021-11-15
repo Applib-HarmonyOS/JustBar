@@ -59,9 +59,7 @@ public class JustBar extends DirectionalLayout implements Component.ClickedListe
 
     private void init() {
         ComponentTransition lt = new ComponentTransition();
-            {
-                lt.removeTransitionType(3);
-            }
+        lt.removeTransitionType(3);
         setComponentTransition(lt);
         setOrientation(HORIZONTAL);
         setAlignment(LayoutAlignment.VERTICAL_CENTER);

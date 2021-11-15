@@ -3,7 +3,6 @@ package com.irozon.justbar;
 import static com.irozon.justbar.Utils.dpToPixel;
 import ohos.agp.animation.Animator;
 import ohos.agp.animation.AnimatorProperty;
-import ohos.agp.animation.AnimatorValue;
 import  ohos.agp.components.AttrSet;
 import ohos.agp.components.Component;
 import ohos.agp.components.ComponentContainer;
@@ -22,10 +21,10 @@ import ohos.app.Context;
  * This is a BarItem class.
  */
 public class BarItem extends DependentLayout implements Component.EstimateSizeListener, Component.DrawTask {
-    private static final String default_unselected_color = "#FF0000";
-    private static final String default_selected_color = "#0000FF";
-    private static final String default_unselected_icon_color = "#0000FF";
-    private static final String default_selected_icon_color = "#FF0000";
+    private static final String DEFAULT_UNSELECTED_COLOR = "#FF0000";
+    private static final String DEFAULT_SELECTED_COLOR = "#0000FF";
+    private static final String DEFAULT_UNSELECTED_ICON_COLOR = "#0000FF";
+    private static final String DEFAULT_SELECTED_ICON_COLOR = "#FF0000";
     private int defaultRadius = 0;
     private final Context context;
     private Image imageView;
@@ -159,8 +158,9 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
      * @return selected or unselected
      */
     private boolean getSelectedStatus(AttrSet attrs) {
+        boolean selectedAttr = attrs.getAttr("selected").isPresent();
         try {
-            return attrs.getAttr("selected").isPresent() ? attrs.getAttr("selected").get().getBoolValue() : false;
+            return selectedAttr ? attrs.getAttr("selected").get().getBoolValue() : selectedAttr;
         } catch (Exception e) {
             return false;
         } finally {
@@ -195,9 +195,9 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
         try {
             return attrs.getAttr("unSelectedColor").isPresent()
                     ? attrs.getAttr("unSelectedColor").get().getColorValue().getValue()
-                    : Color.getIntColor(default_unselected_color);
+                    : Color.getIntColor(DEFAULT_UNSELECTED_COLOR);
         } catch (Exception e) {
-            return Color.getIntColor(default_unselected_color);
+            return Color.getIntColor(DEFAULT_UNSELECTED_COLOR);
         } finally {
             // do nothing
         }
@@ -213,9 +213,9 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
         try {
             return attrs.getAttr("selectedColor").isPresent()
                     ? attrs.getAttr("selectedColor").get().getColorValue().getValue()
-                        : Color.getIntColor(default_selected_color);
+                        : Color.getIntColor(DEFAULT_SELECTED_COLOR);
         } catch (Exception e) {
-            return Color.getIntColor(default_selected_color);
+            return Color.getIntColor(DEFAULT_SELECTED_COLOR);
         } finally {
             //do nothing
         }
@@ -231,9 +231,9 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
         try {
             return attrs.getAttr("unSelectedIconColor").isPresent() ? attrs
                     .getAttr("unSelectedIconColor").get().getColorValue()
-                    .getValue() : Color.getIntColor(default_unselected_icon_color);
+                    .getValue() : Color.getIntColor(DEFAULT_UNSELECTED_ICON_COLOR);
         } catch (Exception e) {
-            return Color.getIntColor(default_unselected_icon_color);
+            return Color.getIntColor(DEFAULT_UNSELECTED_ICON_COLOR);
         } finally {
             //do nothing
         }
@@ -249,9 +249,9 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
         try {
             return attrs.getAttr("selectedIconColor").isPresent() ? attrs
                     .getAttr("selectedIconColor").get().getColorValue()
-                    .getValue() : Color.getIntColor(default_selected_icon_color);
+                    .getValue() : Color.getIntColor(DEFAULT_SELECTED_ICON_COLOR);
         } catch (Exception e) {
-            return Color.getIntColor(default_selected_icon_color);
+            return Color.getIntColor(DEFAULT_SELECTED_ICON_COLOR);
         }
     }
 
@@ -304,8 +304,6 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
      * @param toColor   End color
      */
     public void animateColor(final Component view, int fromColor, int toColor) {
-        AnimatorValue valueAnimator;
-        valueAnimator = new AnimatorValue();
         if (view instanceof Image) {
             ((Image) view).getImageElement().setColorMatrix(createColorMatrix(toColor));
         } else {
