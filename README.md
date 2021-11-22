@@ -12,7 +12,7 @@ Inspired by [Hammad Akram/JustBar](https://github.com/Hamadakram/JustBar)
 5) You can configure the icons by using Red, Green and Blue colors (due to platform dependency)
 6) You can configure the radius for the icons and the icons will change accordingly.
 
-<img src="https://github.com/arpithakori/JustBar/blob/main/screenshots/Just%20Bar%20gif.gif" width="500">
+<img src="screenshots/JustBar.gif" width="500">
 
 ## Dependency
 1. For using justbar module in sample app, include the source code and add the below dependencies in entry/build.gradle to generate hap/support.har.
