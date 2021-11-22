@@ -48,12 +48,11 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
         } else {
             makeUnSelected();
         }
-
     }
 
     /**
      * This is a constructor of BarItem.
-
+     *
      * @param context Context
      */
     public BarItem(Context context) {
@@ -65,7 +64,7 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
 
     /**
      * This is a constructor of BarItem.
-
+     *
      * @param context Context
      * @param attrs AttrSet
      */
@@ -78,7 +77,7 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
 
     /**
      * This is a constructor of BarItem.
-
+     *
      * @param context Context
      * @param attrs AttrSet
      * @param defStyleAttr String
@@ -163,8 +162,6 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
             return selectedAttr ? attrs.getAttr("selected").get().getBoolValue() : selectedAttr;
         } catch (Exception e) {
             return false;
-        } finally {
-            //do nothing
         }
     }
 
@@ -180,8 +177,6 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
                     .getAttr("radius").get().getDimensionValue() : defaultRadius;
         } catch (Exception e) {
             return defaultRadius;
-        } finally {
-            // do nothing
         }
     }
 
@@ -198,8 +193,6 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
                     : Color.getIntColor(DEFAULT_UNSELECTED_COLOR);
         } catch (Exception e) {
             return Color.getIntColor(DEFAULT_UNSELECTED_COLOR);
-        } finally {
-            // do nothing
         }
     }
 
@@ -216,8 +209,6 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
                         : Color.getIntColor(DEFAULT_SELECTED_COLOR);
         } catch (Exception e) {
             return Color.getIntColor(DEFAULT_SELECTED_COLOR);
-        } finally {
-            //do nothing
         }
     }
 
@@ -234,8 +225,6 @@ public class BarItem extends DependentLayout implements Component.EstimateSizeLi
                     .getValue() : Color.getIntColor(DEFAULT_UNSELECTED_ICON_COLOR);
         } catch (Exception e) {
             return Color.getIntColor(DEFAULT_UNSELECTED_ICON_COLOR);
-        } finally {
-            //do nothing
         }
     }
 

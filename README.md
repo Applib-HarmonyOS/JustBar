@@ -1,11 +1,16 @@
 # JustBar
-A HMOS library to add a Bar.
+A HMOS library to add a Bottom Navigation Bar.
 
 # Source
-Inspired by [Hammad Akram/JustBar](https://github.com/Hamadakram/JustBar) - version 1.0
+Inspired by [Hammad Akram/JustBar](https://github.com/Hamadakram/JustBar)
 
 ## Features
-This library provides an animation similar to Just bar feature.
+1) This library provides an animation similar to Bottom navigation bar. 
+2) This bar has search, chat, cart and settings icons - for demo purpose
+3) Initially by default a particular icon can be highlighted.
+4) The user can click on any of the icon, the icon selected will get highlighted and changes to the color specified.
+5) You can configure the icons by using Red, Green and Blue colors (due to platform dependency)
+6) You can configure the radius for the icons and the icons will change accordingly.
 
 <img src="https://github.com/arpithakori/JustBar/blob/main/screenshots/Just%20Bar%20gif.gif" width="500">
 
@@ -44,7 +49,6 @@ This library provides an animation similar to Just bar feature.
             .
             .
             .
-
     </com.irozon.justbar.JustBar>
 ```
 Attribute | Description
@@ -71,8 +75,9 @@ Note: The user can only enter Red, Green and Blue colors for the attributes sele
 
 ## Future Work
 Since there is no alternate api for setColorFilter in HMOS platform, custom attributes - app:selectedColor, 
-app:unSelectedColor, app:selectedIconColor, app:unSelectedIconColor  is currently not supported. 
+app:unSelectedColor, app:selectedIconColor, app:unSelectedIconColor are supported for limited colors because of platform dependency (not all the colors like in android). 
 As a result, user needs to call the createColorMatrix function and pass a colorCode as an argument which will internally call setColorMatrix(createColorMatrix(selectedColor)) to change the color of the drawable. Once HMOS platform supports setColorFilter, then this custom attribute can be included.
+Due to unavailability of similar api as applyTransformation() in HarmonyOS platform, the animation behaviour is not exactly the same as android base library but it is similar.
                                                                                                    
 ## Licence
 ```

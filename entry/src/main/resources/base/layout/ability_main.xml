@@ -5,7 +5,6 @@
               ohos:height="match_parent"
               ohos:alignment="bottom"
               ohos:orientation="vertical">
-
     <com.irozon.justbar.JustBar
         ohos:id="$+id:bottomBar"
         ohos:width="match_parent"
@@ -17,13 +16,11 @@
             ohos:height="0vp"
             app:icon="$graphic:ic_search"
             app:radius="35vp" />
-
         <com.irozon.justbar.BarItem
             ohos:width="0vp"
             ohos:height="0vp"
             app:icon="$graphic:ic_chat"
             app:radius="35vp" />
-
         <com.irozon.justbar.BarItem
             ohos:width="0vp"
             ohos:height="0vp"
@@ -35,9 +32,5 @@
             ohos:height="0vp"
             app:icon="$graphic:ic_settings"
             app:radius="35vp" />
-
-
-
     </com.irozon.justbar.JustBar>
-
 </DirectionalLayout>
