@@ -1,1 +1,1 @@
-include ':sample', ':justbar'
+include ':entry', ':justbar'

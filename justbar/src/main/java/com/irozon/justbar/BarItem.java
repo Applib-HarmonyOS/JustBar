@@ -1,39 +1,38 @@
 package com.irozon.justbar;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-
 import static com.irozon.justbar.Utils.dpToPixel;
+import ohos.agp.animation.Animator;
+import ohos.agp.animation.AnimatorProperty;
+import  ohos.agp.components.AttrSet;
+import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
+import ohos.agp.components.DependentLayout;
+import ohos.agp.components.Image;
+import ohos.agp.components.element.Element;
+import ohos.agp.components.element.ElementScatter;
+import ohos.agp.components.element.VectorElement;
+import ohos.agp.render.BlendMode;
+import ohos.agp.render.Canvas;
+import ohos.agp.render.ColorMatrix;
+import ohos.agp.utils.Color;
+import ohos.app.Context;
 
-
-public class BarItem extends RelativeLayout {
-
-    private static final String default_unselected_color = "#E0E0E0";
-    private static final String default_selected_color = "#E53935";
-    private static final String default_unselected_icon_color = "#000000";
-    private static final String default_selected_icon_color = "#FFFFFF";
-    private static final int default_radius = (int) dpToPixel(25);
-
+/**
+ * This is a BarItem class.
+ */
+public class BarItem extends DependentLayout implements Component.EstimateSizeListener, Component.DrawTask {
+    private static final String DEFAULT_UNSELECTED_COLOR = "#FF0000";
+    private static final String DEFAULT_SELECTED_COLOR = "#0000FF";
+    private static final String DEFAULT_UNSELECTED_ICON_COLOR = "#0000FF";
+    private static final String DEFAULT_SELECTED_ICON_COLOR = "#FF0000";
+    private int defaultRadius = 0;
     private final Context context;
-    private ImageView imageView;
+    private Image imageView;
     private boolean selected;
-
     private int selectedColor;
     private int unSelectedColor;
-
     private int selectedIconColor;
     private int unSelectedIconColor;
-
     private int diameter;
 
     @Override
@@ -44,274 +43,275 @@ public class BarItem extends RelativeLayout {
     @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
-
-        if (selected)
+        if (selected) {
             makeSelected();
-        else
+        } else {
             makeUnSelected();
+        }
     }
 
+    /**
+     * This is a constructor of BarItem.
+     *
+     * @param context Context
+     */
     public BarItem(Context context) {
         super(context);
-
         this.context = context;
+        setEstimateSizeListener(this::onEstimateSize);
         init(null);
     }
 
-    public BarItem(Context context, AttributeSet attrs) {
+    /**
+     * This is a constructor of BarItem.
+     *
+     * @param context Context
+     * @param attrs AttrSet
+     */
+    public BarItem(Context context, AttrSet attrs) {
         super(context, attrs);
-
         this.context = context;
+        setEstimateSizeListener(this::onEstimateSize);
         init(attrs);
     }
 
-    public BarItem(Context context, AttributeSet attrs, int defStyleAttr) {
+    /**
+     * This is a constructor of BarItem.
+     *
+     * @param context Context
+     * @param attrs AttrSet
+     * @param defStyleAttr String
+     */
+    public BarItem(Context context, AttrSet attrs, String defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         this.context = context;
+        setEstimateSizeListener(this::onEstimateSize);
         init(attrs);
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        // Get Radius
-        getLayoutParams().height = diameter;
-        getLayoutParams().width = diameter;
+    public boolean onEstimateSize(int widthMeasureSpec, int heightMeasureSpec) {
+        getLayoutConfig().width = diameter;
+        getLayoutConfig().height = diameter;
+        addDrawTask(this);
+        return false;
     }
 
-    private void init(AttributeSet attrs) {
+    @Override
+    public void onDraw(Component component, Canvas canvas) {
+        setLayoutConfig(getLayoutConfig());
+    }
 
+    private void init(AttrSet attrs) {
         // Get Radius
         diameter = getRadius(attrs) * 2;
-
+        defaultRadius = (int) dpToPixel(getContext(), 25);
         // Get Selected Status
         selected = getSelectedStatus(attrs);
-
         // Get icon from attributes
-        Drawable icon = getIcon(attrs);
-
+        final Element icon = getIcon(attrs);
         // Get selected/unselected color
         unSelectedColor = getUnSelectedColor(attrs);
         selectedColor = getSelectedColor(attrs);
-
         // Get selected/unselected color for icon
         unSelectedIconColor = getUnSelectedIconColor(attrs);
         selectedIconColor = getSelectedIconColor(attrs);
-
         // Add background to item
-        setBackgroundResource(R.drawable.round_background);
-
+        setBackground(ElementScatter.getInstance(getContext()).parse(ResourceTable.Graphic_round_background));
         // Add imageView
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT); // A position in layout.
-
-        imageView = new ImageView(context);
-        imageView.setLayoutParams(layoutParams);
-
-        if (icon != null)
-            imageView.setImageDrawable(icon);
-
-        addView(imageView);
-
-        if (selected)
+        DependentLayout.LayoutConfig layoutParams = new DependentLayout
+                .LayoutConfig(ComponentContainer.LayoutConfig.MATCH_CONTENT,
+                ComponentContainer.LayoutConfig.MATCH_CONTENT);
+        layoutParams.addRule(LayoutConfig.CENTER_IN_PARENT); // A position in layout.
+        imageView = new Image(context);
+        imageView.setLayoutConfig(layoutParams);
+        if (icon != null) {
+            imageView.setImageElement(icon);
+        }
+        addComponent(imageView);
+        if (selected) {
             makeSelected();
-
+        }
         setInitialColors();
     }
 
     /**
-     * Set initial color of the BarItem according to the attributes
+     * Set initial color of the BarItem according to the attributes.
      */
     private void setInitialColors() {
         if (selected) {
-            getBackground().setColorFilter(selectedColor, PorterDuff.Mode.SRC_IN);
-            imageView.setColorFilter(selectedIconColor);
+            getBackgroundElement().setColorMatrix(createColorMatrix(selectedColor));
+            getBackgroundElement().setStateColorMode(BlendMode.SRC_IN);
+            imageView.getImageElement().setColorMatrix(createColorMatrix(selectedIconColor));
         } else {
-            getBackground().setColorFilter(unSelectedColor, PorterDuff.Mode.SRC_IN);
-            imageView.setColorFilter(unSelectedIconColor);
+            getBackgroundElement().setColorMatrix(createColorMatrix(unSelectedColor));
+            getBackgroundElement().setStateColorMode(BlendMode.SRC_IN);
+            imageView.getImageElement().setColorMatrix(createColorMatrix(unSelectedIconColor));
         }
-
     }
 
     /**
-     * Get initial state of the BarItem (selected/unselected)
+     * Get initial state of the BarItem (selected/unselected).
      *
      * @param attrs AttributeSet
      * @return selected or unselected
      */
-    private boolean getSelectedStatus(AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BarItem, 0, 0);
+    private boolean getSelectedStatus(AttrSet attrs) {
+        boolean selectedAttr = attrs.getAttr("selected").isPresent();
         try {
-            return ta.getBoolean(R.styleable.BarItem_selected, false);
+            return selectedAttr ? attrs.getAttr("selected").get().getBoolValue() : selectedAttr;
         } catch (Exception e) {
             return false;
-        } finally {
-            ta.recycle();
         }
     }
 
     /**
-     * Get radius from the attributes
+     * Get radius from the attributes.
      *
      * @param attrs AttributeSet
      * @return radius of the BarItem
      */
-    private int getRadius(AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BarItem, 0, 0);
+    private int getRadius(AttrSet attrs) {
         try {
-            return (int) ta.getDimension(R.styleable.BarItem_radius, default_radius);
+            return attrs.getAttr("radius").isPresent() ? attrs
+                    .getAttr("radius").get().getDimensionValue() : defaultRadius;
         } catch (Exception e) {
-            return default_radius;
-        } finally {
-            ta.recycle();
+            return defaultRadius;
         }
     }
 
     /**
-     * Get unselected color for BarItem from the attribute
+     * Get unselected color for BarItem from the attribute.
      *
      * @param attrs AttributeSet
      * @return Color for unselected state for BarItem
      */
-    private int getUnSelectedColor(AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BarItem, 0, 0);
+    private int getUnSelectedColor(AttrSet attrs) {
         try {
-            return ta.getColor(R.styleable.BarItem_unSelectedColor, Color.parseColor(default_unselected_color));
+            return attrs.getAttr("unSelectedColor").isPresent()
+                    ? attrs.getAttr("unSelectedColor").get().getColorValue().getValue()
+                    : Color.getIntColor(DEFAULT_UNSELECTED_COLOR);
         } catch (Exception e) {
-            return Color.parseColor(default_unselected_color);
-        } finally {
-            ta.recycle();
+            return Color.getIntColor(DEFAULT_UNSELECTED_COLOR);
         }
     }
 
     /**
-     * Get selected color for BarItem from the attribute
+     * Get selected color for BarItem from the attribute.
      *
      * @param attrs AttributeSet
      * @return Color for selected state for BarItem
      */
-    private int getSelectedColor(AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BarItem, 0, 0);
+    private int getSelectedColor(AttrSet attrs) {
         try {
-            return ta.getColor(R.styleable.BarItem_selectedColor, Color.parseColor(default_selected_color));
+            return attrs.getAttr("selectedColor").isPresent()
+                    ? attrs.getAttr("selectedColor").get().getColorValue().getValue()
+                        : Color.getIntColor(DEFAULT_SELECTED_COLOR);
         } catch (Exception e) {
-            return Color.parseColor(default_selected_color);
-        } finally {
-            ta.recycle();
+            return Color.getIntColor(DEFAULT_SELECTED_COLOR);
         }
     }
 
     /**
-     * Get unselected color for icon from the attribute
+     * Get unselected color for icon from the attribute.
      *
      * @param attrs AttributeSet
      * @return Color for unselected state for icon
      */
-    private int getUnSelectedIconColor(AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BarItem, 0, 0);
+    private int getUnSelectedIconColor(AttrSet attrs) {
         try {
-            return ta.getColor(R.styleable.BarItem_unSelectedIconColor, Color.parseColor(default_unselected_icon_color));
+            return attrs.getAttr("unSelectedIconColor").isPresent() ? attrs
+                    .getAttr("unSelectedIconColor").get().getColorValue()
+                    .getValue() : Color.getIntColor(DEFAULT_UNSELECTED_ICON_COLOR);
         } catch (Exception e) {
-            return Color.parseColor(default_unselected_icon_color);
-        } finally {
-            ta.recycle();
+            return Color.getIntColor(DEFAULT_UNSELECTED_ICON_COLOR);
         }
     }
 
     /**
-     * Get Selected color for icon from the attribute
+     * Get Selected color for icon from the attribute.
      *
      * @param attrs AttributeSet
      * @return Color for selected state for icon
      */
-    private int getSelectedIconColor(AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BarItem, 0, 0);
+    private int getSelectedIconColor(AttrSet attrs) {
         try {
-            return ta.getColor(R.styleable.BarItem_selectedIconColor, Color.parseColor(default_selected_icon_color));
+            return attrs.getAttr("selectedIconColor").isPresent() ? attrs
+                    .getAttr("selectedIconColor").get().getColorValue()
+                    .getValue() : Color.getIntColor(DEFAULT_SELECTED_ICON_COLOR);
         } catch (Exception e) {
-            return Color.parseColor(default_selected_icon_color);
-        } finally {
-            ta.recycle();
+            return Color.getIntColor(DEFAULT_SELECTED_ICON_COLOR);
         }
     }
 
     /**
-     * Get Icon from the attributes
+     * Get Icon from the attributes.
      *
      * @param attrs AttributeSet
      * @return Icon from the attributes provided
      */
-    private Drawable getIcon(AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.BarItem, 0, 0);
+    private Element getIcon(AttrSet attrs) {
         try {
-            return ta.getDrawable(R.styleable.BarItem_icon);
+            return attrs.getAttr("icon").isPresent() ? attrs
+                    .getAttr("icon").get().getElement() : new VectorElement(getContext(),
+                    ResourceTable.Graphic_round_background);
         } catch (Exception e) {
             return null;
-        } finally {
-            ta.recycle();
         }
     }
 
-
     /**
-     * Make BarItem unselected
+     * Make BarItem unselected.
      */
     private void makeSelected() {
-        ResizeWidthAnimation anim = new ResizeWidthAnimation(this, (diameter + (diameter * 40) / 100));
-        anim.setDuration(250);
-        anim.setInterpolator(new BounceInterpolator(1, 1));
-
-        startAnimation(anim);
-
-
+        AnimatorProperty animatorProperty = this.createAnimatorProperty();
+        animatorProperty.setCurveType(Animator.CurveType.ACCELERATE);
+        animatorProperty.scaleX(1.5f).scaleXFrom(1);
+        animatorProperty.start();
+        invalidate();
         animateColor(this, unSelectedColor, selectedColor);
-
         animateColor(imageView, unSelectedIconColor, selectedIconColor);
     }
 
     /**
-     * Make BarItem unselected
+     * Make BarItem unselected.
      */
     private void makeUnSelected() {
-        ResizeWidthAnimation reverse = new ResizeWidthAnimation(this, diameter);
-        reverse.setDuration(250);
-        reverse.setInterpolator(new BounceInterpolator(1, 1));
-
-        startAnimation(reverse);
-
+        AnimatorProperty animatorProperty = this.createAnimatorProperty();
+        animatorProperty.setCurveType(Animator.CurveType.ACCELERATE);
+        animatorProperty.scaleX(1f).scaleXFrom(1.5f);
+        animatorProperty.start();
         animateColor(this, selectedColor, unSelectedColor);
-
         animateColor(imageView, selectedIconColor, unSelectedIconColor);
     }
 
     /**
-     * Animate Color on the view
+     * Animate Color on the view.
      *
      * @param view      The view that's color going to change
      * @param fromColor Start color
      * @param toColor   End color
      */
-    public void animateColor(final View view, int fromColor, int toColor) {
-        ValueAnimator valueAnimator;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            valueAnimator = ValueAnimator.ofArgb(fromColor, toColor);
+    public void animateColor(final Component view, int fromColor, int toColor) {
+        if (view instanceof Image) {
+            ((Image) view).getImageElement().setColorMatrix(createColorMatrix(toColor));
         } else {
-            valueAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), fromColor, toColor);
+            getBackgroundElement().setColorMatrix(createColorMatrix(toColor));
         }
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                if (view instanceof ImageView) {
-                    ((ImageView) view).setColorFilter((Integer) valueAnimator.getAnimatedValue());
-                } else {
-                    getBackground().setColorFilter((Integer) valueAnimator.getAnimatedValue(), PorterDuff.Mode.SRC_IN);
-                }
-            }
-        });
+    }
 
-        valueAnimator.setDuration(300);
-        valueAnimator.start();
+    private ColorMatrix createColorMatrix(int colorCode) {
+        final ColorMatrix colorMatrix = new ColorMatrix();
+        float[] colorTransform = new float[20];
+        if (colorCode == Color.RED.getValue()) {
+            colorTransform = new float[]{0, 1f, 0, 0, 0, 0, 0, 0f, 0, 0, 0, 0, 0, 0f, 0, 0, 0, 0, 1f, 0};
+        } else if (colorCode == Color.GREEN.getValue()) {
+            colorTransform = new float[]{0, 0f, 0, 0, 0, 0, 0, 1f, 0, 0, 0, 0, 0, 0f, 0, 0, 0, 0, 1f, 0};
+        } else if (colorCode == Color.BLUE.getValue()) {
+            colorTransform = new float[]{0, 0f, 0, 0, 0, 0, 0, 0f, 0, 0, 0, 0, 0, 1f, 0, 0, 0, 0, 1f, 0};
+        }
+        colorMatrix.setSaturation(0f);
+        colorMatrix.setMatrix(colorTransform);
+        return colorMatrix;
     }
 }
