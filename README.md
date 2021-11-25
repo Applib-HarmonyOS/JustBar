@@ -1,3 +1,6 @@
+[![.github/workflows/main.yml](https://github.com/applibgroup/JustBar/actions/workflows/main.yml/badge.svg)](https://github.com/applibgroup/JustBar/actions/workflows/main.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=applibgroup_JustBar&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=applibgroup_JustBar)
+
 # JustBar
 A HMOS library to add a Bottom Navigation Bar.
 
@@ -28,6 +31,13 @@ Inspired by [Hammad Akram/JustBar](https://github.com/Hamadakram/JustBar)
 ```groovy
 	dependencies {
 		implementation fileTree(dir: 'libs', include: ['*.har'])
+		testImplementation 'junit:junit:4.13'
+	}
+```
+3. For using justbar from a remote repository in separate application, add the below dependencies in entry/build.gradle file.
+```groovy
+	dependencies {
+		implementation 'dev.applibgroup:justbar:1.0.0'
 		testImplementation 'junit:junit:4.13'
 	}
 ```
