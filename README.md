@@ -21,11 +21,11 @@ Inspired by [Hammad Akram/JustBar](https://github.com/Hamadakram/JustBar)
 1. For using justbar module in sample app, include the source code and add the below dependencies in entry/build.gradle to generate hap/support.har.
 ```groovy
 	dependencies {
-        implementation fileTree(dir: 'libs', include: ['*.jar', '*.har'])
-        testImplementation 'junit:junit:4.13'
-        ohosTestImplementation 'com.huawei.ohos.testkit:runner:1.0.0.200'
-        implementation project(':justbar')
-    }
+		implementation fileTree(dir: 'libs', include: ['*.jar', '*.har'])
+        	testImplementation 'junit:junit:4.13'
+                ohosTestImplementation 'com.huawei.ohos.testkit:runner:1.0.0.200'
+                implementation project(':justbar')
+	}
 ```
 2. For using justbar in separate application using har file, add the har file in the entry/libs folder and add the dependencies in entry/build.gradle file.
 ```groovy
